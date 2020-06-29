@@ -4,7 +4,7 @@ const offerController = require('../controllers/offer');
 
 const router = express.Router();
 
-router.get('/offer', offerController.getOffers);
+router.get('/offers', offerController.getOffers);
 router.get('/offer/:restaurantId', offerController.getOffer);
 
 router.post('/offer', offerController.postOffer);

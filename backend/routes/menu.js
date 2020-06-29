@@ -4,7 +4,7 @@ const menuController = require('../controllers/menu');
 
 const router = express.Router();
 
-router.get('/meals/:restaurantId', menuController.getMeals);
+router.get('/:restaurantId', menuController.getMeals);
 router.get('/meal/:mealId', menuController.getMeal);
 
 router.post('/add-meal', menuController.postMeal);
