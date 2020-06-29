@@ -30,9 +30,18 @@ const restaurantSchema = Schema({
                     type: Schema.Types.ObjectId,
                     ref: 'Meal',
                 },
-            }
+            },
         ],
     },
 });
+
+restaurantSchema.methods.addToMenu = function (meal) {
+    const updatedMenu = [...this.menu.meals];
+    updatedMenu.push({
+        mealId: meal._id,
+    });
+    this.menu = { meals: updatedMenu };
+    return this.save();
+};
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

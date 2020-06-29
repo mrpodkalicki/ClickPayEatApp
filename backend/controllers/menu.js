@@ -3,10 +3,13 @@ const Meal = require('../models/meal');
 
 exports.getMeals = (req, res, next) => {
     const restaurantId = req.params.restaurantId;
-    Restaurant.find({ _id: restaurantId })
+    Restaurant.findOne({ _id: restaurantId })
         .populate('menu.meals.mealId')
-        .then((meals) => {
-            res.status(200).json({ message: 'Meals fetched', meals: meals });
+        .then((restaurant) => {
+            res.status(200).json({
+                message: 'Meals fetched',
+                meals: restaurant.menu,
+            });
         })
         .catch((err) => {
             if (!err.statusCode) {
@@ -45,15 +48,14 @@ exports.postMeal = (req, res, next) => {
         name: name,
         description: description,
         price: price,
-        restaurant: restaurantId,
+        restaurantId: restaurantId,
     });
     meal.save()
         .then(() => {
             return Restaurant.findById(restaurantId);
         })
         .then((restaurant) => {
-            restaurant.menu.meals.push(meal);
-            return restaurant.save();
+            return restaurant.addToMenu(meal);
         })
         .then((restaurant) => {
             res.status(201).json({

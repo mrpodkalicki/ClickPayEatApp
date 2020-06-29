@@ -19,9 +19,9 @@ const mealSchema = Schema({
         type: String,
         required: false,
     },
-    restaurant: {
+    restaurantId: {
         type: Schema.Types.ObjectId,
-        'ref': 'Restaurant',
+        ref: 'Restaurant',
         required: true,
     },
 });
