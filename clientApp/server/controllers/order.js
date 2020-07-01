@@ -1,7 +1,7 @@
 const Order = require('../models/order');
 
-function isEmptyObject(object) {
-    return !Object.keys(object).length;
+function isEmptyObject(obj) {
+    return !Object.keys(obj).length;
 }
 
 exports.getOrders = (req, res, next) => {
@@ -43,7 +43,8 @@ exports.getOrder = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
     const meals = req.body.meals;
-    const price = req.body.price;
+    const restaurant = req.body.restaurantName;
+    const price = req.body.totalPrice;
     const address = req.body.deliveryAddress;
     const time = req.body.deliveryTime;
     const phone = req.body.phoneNumber;
@@ -51,7 +52,8 @@ exports.postOrder = (req, res, next) => {
     const surname = req.body.clientSurname;
     const order = new Order({
         meals: meals,
-        price: price,
+        restaurantName: restaurant,
+        totalPrice: price,
         deliveryAddress: address,
         deliveryTime: time,
         phoneNumber: phone,
@@ -60,7 +62,9 @@ exports.postOrder = (req, res, next) => {
     });
     order
         .save()
-        .then(res.status(201).json({ order: order }))
+        .then(() => {
+            res.status(201).json({ order: order });
+        })
         .catch((err) => {
             if (!err.statusCode) {
                 err.statusCode = 500;

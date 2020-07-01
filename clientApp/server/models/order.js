@@ -5,16 +5,28 @@ const Schema = mongoose.Schema;
 const orderSchema = Schema({
     meals: [
         {
-            mealId: {
-                type: Schema.Types.ObjectId,
-                ref: 'Meal',
-            },
-            quantity: {
-                type: Number,
-            },
+            meal: [
+                {
+                    name: {
+                        type: String,
+                        required: true,
+                    },
+                    price: {
+                        type: Number,
+                        required: true,
+                    },
+                    quantity: {
+                        type: Number,
+                    },
+                },
+            ],
         },
     ],
-    price: {
+    restaurantName: {
+        type: String,
+        required: true,
+    },
+    totalPrice: {
         type: Number,
         required: true,
     },
