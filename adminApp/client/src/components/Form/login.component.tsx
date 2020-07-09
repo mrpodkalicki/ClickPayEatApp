@@ -1,9 +1,15 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button  from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
+import {API} from '../../utilities/API';
+import {useSignInActions,useSignInState } from '../../store/sigIn'
+const axios = require('axios');
+
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +53,11 @@ const initialValues = {
     password: '',
 };
 
+interface LoginPerson {
+    email: string,
+    password: string
+}
+
 const signInSchema = Yup.object().shape({
     email: Yup.string()
         .email('Błędny e-mail')
@@ -54,16 +65,6 @@ const signInSchema = Yup.object().shape({
     password: Yup.string()
         .required('Hasło jest wymagane'),
 });
-
-const handleSubmit = async (values: any, actions: any) => {
-    console.log(10)
-    try {
-    } catch (error) {
-
-    } finally {
-        actions.setSubmitting(false);
-    }
-};
 
 
 const SignupSchema = Yup.object().shape({
@@ -76,36 +77,49 @@ const SignupSchema = Yup.object().shape({
         .required('Required'),
 });
 
-const signIn = (values: any) => {
-    console.log(values);
-}
-
-
 const Login = () => {
+
     const classes = useStyles();
-    return (
-        <div  className={classes.root}>
-            <Formik
-                initialValues={{
-                    email: '',
-                    password: ''
-                }}
-                validationSchema={SignupSchema}
-                onSubmit={signIn}
-            >
-                {({ errors, touched, isSubmitting }) => (
-                    <Form >
-                            <Field name="email" type="email"  label="E-mail" placeholder="email"/>
-                            <ErrorMessage name="email" />
-                            <Field name="password"  label="password" placeholder="password" />
-                            <ErrorMessage name="password" />
-                            <Button  className={'btn'} variant="contained" color="primary" type="submit">Submit</Button>
-                    </Form>
-                )}
-            </Formik>
-        </div>
+
+    const  signInResponse = useSignInState();
+    const {signIn,setSignInResponse } = useSignInActions();
 
 
-    );
+    if(signInResponse.status === 'success'){
+        return <Redirect to="/dashboard" />;
+    }
+    if (signInResponse.status === 'loading'){
+        return <p>logowanie</p>
+    }else {
+        return (
+            <div className={classes.root}>
+                <Formik
+                    initialValues={{
+                        email: '',
+                        password: ''
+                    }}
+                    validationSchema={SignupSchema}
+                    onSubmit={
+                        values => {
+                            signIn(values)
+                        }
+                    }
+                >
+                    {({errors, touched, isSubmitting}) => (
+                        <Form>
+                            <Field name="email" type="email" label="E-mail" placeholder="email"/>
+                            <ErrorMessage name="email"/>
+                            <Field name="password" type="password" label="password" placeholder="password"/>
+                            <ErrorMessage name="password"/>
+                            <p >{signInResponse.status === 'failure' ? 'wrong email or password' : ''}</p>
+                            <Button className={'btn'} variant="contained" color="primary" type="submit">Submit</Button>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
+
+
+        );
+    }
 }
 export default Login;
