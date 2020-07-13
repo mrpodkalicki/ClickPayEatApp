@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import { useHistory } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button  from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import {API} from '../../utilities/API';
-import {useSignInActions,useSignInState } from '../../store/sigIn'
-const axios = require('axios');
+import {useSignInActions, useSignInState } from '../../store/sigIn'
+
 
 
 
@@ -78,7 +78,7 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Login = () => {
-
+    const history = useHistory();
     const classes = useStyles();
 
     const  signInResponse = useSignInState();
@@ -86,13 +86,17 @@ const Login = () => {
 
 
     if(signInResponse.status === 'success'){
-        return <Redirect to="/dashboard" />;
-    }
-    if (signInResponse.status === 'loading'){
+        return (
+            <div>
+                <Redirect to="/dashboard" />
+            </div>
+        )
+    }if (signInResponse.status === 'loading'){
         return <p>logowanie</p>
     }else {
         return (
             <div className={classes.root}>
+                <p>WELCOME TO CLIC PAY EAT </p>
                 <Formik
                     initialValues={{
                         email: '',
@@ -117,8 +121,6 @@ const Login = () => {
                     )}
                 </Formik>
             </div>
-
-
         );
     }
 }
