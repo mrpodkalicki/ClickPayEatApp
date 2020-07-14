@@ -1,61 +1,82 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import {withRouter} from "react-router";
+import React, {useEffect, useState} from 'react';
+import {useRestaurantActions, useReastaurantState } from '../../store/restaurant';
+import  Item from '../../components/materialUi/Item/Item';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Grid, { GridSpacing } from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+            margin: 5,
+            '& > span': {
+                margin: theme.spacing(2),
+            }
+        },
+        paper: {
+            height: 140,
+            width: 100,
+        },
+        control: {
+            padding: theme.spacing(2),
+        },
+    }),
+);
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-});
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 const Restaurants = () => {
     const classes = useStyles();
+    const {getRestaurants } = useRestaurantActions();
+    const  getRestaurantsResponse = useReastaurantState();
+
+    useEffect(  () =>  {
+        getRestaurants();
+    },[]);
+
+    const addRestaurant = () => {
+        console.log('add')
+    }
+
+    const showRestaurants = () => {
+        const restaurants: any = getRestaurantsResponse.data;
+
+        return restaurants.data.restaurants.map((restaurant: any, index: number) => {
+
+            const body = [
+                {name: 'address', value: restaurant.address},
+                {name: 'category', value: restaurant.category},
+                {name: 'cuisine', value: restaurant.cuisine},
+            ]
+            return (
+                <Item key = {index} header = {restaurant.name} body = {body} />
+            )
+        })
+    }
+
+    if(getRestaurantsResponse.status === 'success'){
+        return (
+          <div>
+              <h2>Restaurant</h2>
+              <IconButton onClick={addRestaurant} aria-label="delete" color="primary">
+                  <AddIcon/>
+              </IconButton>
+              <Grid container className={classes.root} spacing={2}>
+                  <Grid item xs={12}>
+                      <Grid container justify="center" spacing={3}>
+                          {showRestaurants()}
+                      </Grid>
+                  </Grid>
+              </Grid>
+          </div>
+        )
+    }
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+        <div>
+            Loading
+        </div>
+    )
 }
 
 export default Restaurants;

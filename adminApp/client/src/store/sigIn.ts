@@ -66,7 +66,6 @@ function* signInRequestSagaWorker({ payload }: any) {
     try {
         const response: any = yield api.signInRequest(payload);
         yield put(actions.signInSuccess(response));
-        console.log(response,'RES')
     } catch (ex) {
 
         yield put(actions.signInFailure(ex.message));
