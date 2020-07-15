@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-const Item = (props: any) => {
+const CardItem = (props: any) => {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);;
     const handleExpandClick = () => {
@@ -106,4 +106,4 @@ const Item = (props: any) => {
     )
 }
 
-export default Item;
+export default CardItem;

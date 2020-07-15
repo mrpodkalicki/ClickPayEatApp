@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useRestaurantActions, useReastaurantState } from '../../store/restaurant';
-import  Item from '../../components/MaterialUi.component/Item.component/Item..component';
+import  CardItem from '../../components/MaterialUi.component/Card.component/Card.component';
 import ModalWrapper from '../../components/MaterialUi.component/Modal.component/modal';
 import AddRestaurantComponent from '../../components/Form/addRestaurant.component/addRestaurant.component';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -55,7 +55,7 @@ const Restaurants = () => {
                     {name: 'cuisine', value: restaurant.cuisine},
                 ]
                 return (
-                    <Item id={restaurant._id}
+                    <CardItem id={restaurant._id}
                           menu = {
                               <IconButton  id ={restaurant._id} aria-label="delete"onClick={deleteItem} >
                                   <DeleteForeverIcon />
