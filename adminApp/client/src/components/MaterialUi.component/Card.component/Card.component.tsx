@@ -20,7 +20,7 @@ import {useReastaurantState, useRestaurantActions} from "../../../store/restaura
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            maxWidth: 345,
+            minWidth: 445,
             margin: 3,
         },
         media: {
@@ -79,12 +79,6 @@ const CardItem = (props: any) => {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
                 <IconButton
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: expanded,
@@ -99,7 +93,7 @@ const CardItem = (props: any) => {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Menu:</Typography>
+                    <div >{props.collapse}</div>
                 </CardContent>
             </Collapse>
         </Card>

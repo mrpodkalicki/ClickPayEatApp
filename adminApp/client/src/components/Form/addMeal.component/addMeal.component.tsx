@@ -4,8 +4,7 @@ import Button  from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import {useSignInActions, useSignInState} from "../../../store/sigIn";
-import {useRestaurantActions} from "../../../store/restaurant";
+import {useMealsActions, useMealsState} from "../../../store/meals";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,66 +44,59 @@ export  const ErrorMessage = styled(FormikErrorMessage)`
 
 
 const addRestaurantSchema = Yup.object().shape({
-    cuisine: Yup.string()
-        .min(5, 'Too Short!')
-        .max(70, 'Too Long!')
-        .required('Required'),
     name: Yup.string()
         .min(5, 'Too Short!')
         .max(70, 'Too Long!')
         .required('Required'),
-    address: Yup.string()
+    description: Yup.string()
         .min(5, 'Too Short!')
         .max(70, 'Too Long!')
         .required('Required'),
-    category: Yup.string()
-        .min(5, 'Too Short!')
-        .max(70, 'Too Long!')
+    price: Yup.number()
         .required('Required'),
+
 });
 
 
-const AddRestaurantComponent = (props: any) => {
+const AddMeal = (props: any) => {
     const classes = useStyles();
-    const  addRestaurantResponse = useSignInState();
-    const {getRestaurants, addRestaurant } = useRestaurantActions();
+    const getMealsResponse = useMealsState();
+    const {getMenuRequest, addMealRequest, deleteMealRequest} = useMealsActions();
 
-    // if(addRestaurantResponse.status === 'success'){
-    //     return (
-    //         <div>
-    //            Add restaurantt
-    //         </div>
-    //     )
-    // }
-    if (addRestaurantResponse.status === 'loading'){
-        return <p>czekaj</p>
+    if (getMealsResponse.status === 'loading'){
+        return <p>loading</p>
     }else {
         return (
             <div className={classes.root}>
                 <Formik
                     initialValues={{
-                        cuisine: '',
                         name: '',
-                        address: '',
-                        category: ''
+                        description: '',
+                        price: 0,
+
                     }}
                     validationSchema={addRestaurantSchema}
                     onSubmit={
-                        (values, ) => {
-                            addRestaurant(values);
+                        (values ) => {
+
+                            const body = {
+                                restaurantId :  props.restaurantId,
+                                name: values.name,
+                                description: values.description,
+                                price: values.price
+                            }
+                            addMealRequest(body);
                         }
                     }
                 >
                     {({errors, touched, isSubmitting}) => (
                         <Form>
-                            <Field name="cuisine" type="text" label="cuisine" placeholder="cuisine"/>
-                            <ErrorMessage name="cuisine"/>
                             <Field name="name" type="text" label="name" placeholder="name"/>
                             <ErrorMessage name="name"/>
-                            <Field name="address" type="text" label="address" placeholder="address"/>
-                            <ErrorMessage name="address"/>
-                            <Field name="category" type="text" label="category" placeholder="category"/>
-                            <ErrorMessage name="category"/>
+                            <Field name="description" type="text" label="description" placeholder="description"/>
+                            <ErrorMessage name="description"/>
+                            <Field name="price" type="number" label="price" placeholder="price"/>
+                            <ErrorMessage name="price"/>
                             <Button className={'btn'} variant="contained" color="primary" type="submit">Submit</Button>
                         </Form>
                     )}
@@ -113,4 +105,4 @@ const AddRestaurantComponent = (props: any) => {
         );
     }
 }
-export default AddRestaurantComponent;
+export default AddMeal;

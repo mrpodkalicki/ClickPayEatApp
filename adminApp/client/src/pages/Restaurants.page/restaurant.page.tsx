@@ -9,6 +9,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CachedIcon from '@material-ui/icons/Cached';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {useMealsActions, useMealsState} from "../../store/meals";
+import ListWrapper from "../../components/MaterialUi.component/ListMeals.component/ListMeals.component";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,11 +34,16 @@ const Restaurants = () => {
     const [counter, setCounter] = useState<number>(0);
     const classes = useStyles();
     const {getRestaurants, deleteRestaurant } = useRestaurantActions();
-    const  getRestaurantsResponse = useReastaurantState();
+    const getRestaurantsResponse = useReastaurantState();
+    const getMealsResponse = useMealsState();
+    const {getMenuRequest, addMealRequest, deleteMealRequest} = useMealsActions();
+
 
     useEffect(  () =>  {
         getRestaurants();
     },[counter]);
+
+
 
     const showRestaurants = () => {
         const restaurants: any = getRestaurantsResponse.data;
@@ -48,7 +55,6 @@ const Restaurants = () => {
 
         if(Array.isArray(restaurants.data.restaurants)){
             return restaurants.data.restaurants.map((restaurant: any, index: number) => {
-
                 const body = [
                     {name: 'address', value: restaurant.address},
                     {name: 'category', value: restaurant.category},
@@ -63,7 +69,13 @@ const Restaurants = () => {
                           }
                           key = {index}
                           header = {restaurant.name}
-                          body = {body} />
+                          body = {body}
+                          collapse = {
+                              <ListWrapper
+                                    header ={'Menu'}
+                                    restaurantId = {restaurant._id}
+                              />
+                          }/>
                 )
             })
         }

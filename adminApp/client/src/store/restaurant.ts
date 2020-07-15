@@ -16,22 +16,20 @@ const api = {
     },
     addRestaurantRequest: (values: any) => {
         try{
-            const response =   axios.post( API + '/offer',
+            return axios.post( API + '/offer',
                 {
                     cuisine: values.cuisine,
                     name: values.name,
                     address: values.address,
                     category: values.category
                 })
-            return response
         } catch (err) {
             return err
         }
     },
-    deleteRestaurantRequest: (id: any) => {
+    deleteRestaurantRequest: (id: string) => {
         try{
-            const response =   axios.delete( API + `/offer/${id}`);
-            return response
+            return axios.delete( API + `/offer/${id}`);
         } catch (err) {
             return err
         }
