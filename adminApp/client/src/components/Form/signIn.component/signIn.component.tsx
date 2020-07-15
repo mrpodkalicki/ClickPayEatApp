@@ -6,7 +6,7 @@ import Button  from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import {useSignInActions, useSignInState } from '../../store/sigIn'
+import {useSignInActions, useSignInState } from '../../../store/sigIn'
 
 
 
@@ -46,28 +46,7 @@ export  const ErrorMessage = styled(FormikErrorMessage)`
     border: solid black ;
 `;
 
-
-
-const initialValues = {
-    email: '',
-    password: '',
-};
-
-interface LoginPerson {
-    email: string,
-    password: string
-}
-
-const signInSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Błędny e-mail')
-        .required('Email jest wymagany'),
-    password: Yup.string()
-        .required('Hasło jest wymagane'),
-});
-
-
-const SignupSchema = Yup.object().shape({
+const SignInSchema = Yup.object().shape({
     email: Yup.string()
         .email('Invalid email')
         .required('Required'),
@@ -77,7 +56,7 @@ const SignupSchema = Yup.object().shape({
         .required('Required'),
 });
 
-const Login = () => {
+const SignIn = () => {
     const history = useHistory();
     const classes = useStyles();
 
@@ -102,7 +81,7 @@ const Login = () => {
                         email: '',
                         password: ''
                     }}
-                    validationSchema={SignupSchema}
+                    validationSchema={SignInSchema}
                     onSubmit={
                         values => {
                             signIn(values)
@@ -124,4 +103,4 @@ const Login = () => {
         );
     }
 }
-export default Login;
+export default SignIn;

@@ -7,7 +7,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
@@ -15,6 +14,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,8 +51,6 @@ const Item = (props: any) => {
         setExpanded(!expanded);
     };
 
-
-
     const getBody = () => {
       return props.body.map((item: any, index: number) => {
           return (
@@ -61,12 +59,17 @@ const Item = (props: any) => {
               </li>)
       })
     }
+
+    const deleteItem = (event: any) => {
+        event.stopPropagation();
+        console.log(event.currentTarget)
+    }
     return (
-        <Card className={classes.root}>
+        <Card className={classes.root} id ={props.id} >
             <CardHeader
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
+                    <IconButton  id ={props.id} aria-label="delete"onClick={deleteItem} >
+                        <DeleteForeverIcon />
                     </IconButton>
                 }
                 title={props.header}

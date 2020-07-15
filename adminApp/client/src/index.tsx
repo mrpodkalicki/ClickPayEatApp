@@ -8,15 +8,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
       <Provider store={store}>
           <BrowserRouter>
               <Routes />
           </BrowserRouter>
       </Provider>
-
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.Fragment>,
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
