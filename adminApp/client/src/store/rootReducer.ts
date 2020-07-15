@@ -5,5 +5,4 @@ import restaurantsReducer from './restaurant';
 export const rootReducer = combineReducers({
     signInResponse: signInReducer,
     getRestaurantsResponse: restaurantsReducer,
-    addRestaurantResponse: restaurantsReducer
 });

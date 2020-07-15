@@ -4,7 +4,7 @@ import {createBrowserHistory} from 'history';
 import  HomePage  from './pages/Home.page/home.page';
 import DashboardPage from './pages/Dashboard.page/dashboard.page';
 import Restaurants from "./pages/Restaurants.page/restaurant.page";
-import SideBar from "./components/SideBar/sideBar";
+import SideBar from "./components/SideBar.component/sideBar.component";
 import SignIn from "./components/Form/signIn.component/signIn.component";
 
 const history = createBrowserHistory();

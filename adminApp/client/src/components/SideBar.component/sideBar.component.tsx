@@ -3,9 +3,10 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import Container from '@material-ui/core/Container';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import './sideBar.css'
+import './sideBar.component.css'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,7 +44,10 @@ const  SideBar = ({children}: any) => {
                     </MenuItem>
                 </MenuList>
             </Paper>
-            <div>{children}</div>
+            <Container maxWidth="lg" fixed>
+                <div>{children}</div>
+            </Container>
+
         </Box>
     )
 }

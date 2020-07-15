@@ -1,5 +1,5 @@
 import React from 'react';
-import SideBar from '../../components/SideBar/sideBar'
+import SideBarComponent from '../../components/SideBar.component/sideBar.component'
 import Button from "@material-ui/core/Button";
 import {ErrorMessage, Field, Form} from "../../components/Form/signIn.component/signIn.component";
 function DashboardPage() {

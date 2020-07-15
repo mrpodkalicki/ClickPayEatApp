@@ -27,7 +27,15 @@ const api = {
         } catch (err) {
             return err
         }
-    }
+    },
+    deleteRestaurantRequest: (id: any) => {
+        try{
+            const response =   axios.delete( API + `/offer/${id}`);
+            return response
+        } catch (err) {
+            return err
+        }
+    },
 };
 
 const restaurants = createSlice({
@@ -64,6 +72,19 @@ const restaurants = createSlice({
             state.status = 'failure';
             state.error = action.payload;
         },
+        deleteRestaurantRequest: (state, _action:PayloadAction<any>) => {
+            state.status = 'loading';
+            state.error = '';
+        },
+        deleteRestaurantSuccess: (state, action: PayloadAction<any>) => {
+            state.status = 'success';
+            state.data = action.payload;
+            state.error = '';
+        },
+        deleteRestaurantFailure: (state, action:PayloadAction<string>) => {
+            state.status = 'failure';
+            state.error = action.payload;
+        },
     }
 });
 
@@ -77,6 +98,7 @@ function* getRestaurantsRequestSagaWorker() {
         yield put(actions.getRestaurantsFailure(ex.message));
     }
 }
+
 function* addRestaurantRequestSagaWorker({ payload }: any) {
     try {
         const response: any = yield api.addRestaurantRequest(payload);
@@ -86,9 +108,19 @@ function* addRestaurantRequestSagaWorker({ payload }: any) {
     }
 }
 
-export function*getRestaurantsSagaWatcher() {
+function* deleteRestaurantsRequestSagaWorker({ payload }: any) {
+    try {
+        const response: any = yield api.deleteRestaurantRequest(payload);
+        yield put(actions.deleteRestaurantSuccess(response));
+    } catch (ex) {
+        yield put(actions.deleteRestaurantFailure(ex.message));
+    }
+}
+
+export function*restaurantsSagaWatcher() {
     yield takeEvery(actions.getRestaurantsRequest.type, getRestaurantsRequestSagaWorker);
     yield takeEvery(actions.addRestaurantRequest.type, addRestaurantRequestSagaWorker);
+    yield takeEvery(actions.deleteRestaurantRequest.type, deleteRestaurantsRequestSagaWorker);
 }
 
 export const useRestaurantActions = () => {
@@ -96,10 +128,10 @@ export const useRestaurantActions = () => {
     return {
         getRestaurants: () => dispatch(actions.getRestaurantsRequest()),
         addRestaurant: (payload: any) => dispatch(actions.addRestaurantRequest(payload)),
+        deleteRestaurant: (payload: any) => dispatch(actions.deleteRestaurantRequest(payload)),
     };
 };
 
 export const useReastaurantState = () => useSelector((state) =>  state.getRestaurantsResponse);
-export const useAddReastaurantState = () => useSelector((state) =>  state.addRestaurantResponse);
 
 export default restaurants.reducer;

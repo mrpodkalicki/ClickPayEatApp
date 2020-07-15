@@ -1,22 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useRestaurantActions, useReastaurantState } from '../../store/restaurant';
-import  Item from '../../components/materialUi/Item/Item';
-import ModalWrapper from '../../components/materialUi/Modal/modal';
+import  Item from '../../components/MaterialUi.component/Item.component/Item..component';
+import ModalWrapper from '../../components/MaterialUi.component/Modal.component/modal';
 import AddRestaurantComponent from '../../components/Form/addRestaurant.component/addRestaurant.component';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import CachedIcon from '@material-ui/icons/Cached';
 import IconButton from "@material-ui/core/IconButton";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             flexGrow: 1,
             margin: 5,
-            '& > span': {
-                margin: theme.spacing(2),
-            }
+
         },
         paper: {
             height: 140,
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Restaurants = () => {
     const [counter, setCounter] = useState<number>(0);
     const classes = useStyles();
-    const {getRestaurants } = useRestaurantActions();
+    const {getRestaurants, deleteRestaurant } = useRestaurantActions();
     const  getRestaurantsResponse = useReastaurantState();
 
     useEffect(  () =>  {
@@ -41,6 +40,11 @@ const Restaurants = () => {
 
     const showRestaurants = () => {
         const restaurants: any = getRestaurantsResponse.data;
+
+        const deleteItem = (event: any) => {
+            event.stopPropagation();
+            deleteRestaurant(event.currentTarget.id)
+        }
 
         if(Array.isArray(restaurants.data.restaurants)){
             return restaurants.data.restaurants.map((restaurant: any, index: number) => {
@@ -51,7 +55,15 @@ const Restaurants = () => {
                     {name: 'cuisine', value: restaurant.cuisine},
                 ]
                 return (
-                    <Item id={restaurant._id} key = {index} header = {restaurant.name} body = {body} />
+                    <Item id={restaurant._id}
+                          menu = {
+                              <IconButton  id ={restaurant._id} aria-label="delete"onClick={deleteItem} >
+                                  <DeleteForeverIcon />
+                              </IconButton>
+                          }
+                          key = {index}
+                          header = {restaurant.name}
+                          body = {body} />
                 )
             })
         }

@@ -15,6 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import {useReastaurantState, useRestaurantActions} from "../../../store/restaurant";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,8 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Item = (props: any) => {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-
+    const [expanded, setExpanded] = React.useState(false);;
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
@@ -60,17 +60,11 @@ const Item = (props: any) => {
       })
     }
 
-    const deleteItem = (event: any) => {
-        event.stopPropagation();
-        console.log(event.currentTarget)
-    }
     return (
         <Card className={classes.root} id ={props.id} >
             <CardHeader
                 action={
-                    <IconButton  id ={props.id} aria-label="delete"onClick={deleteItem} >
-                        <DeleteForeverIcon />
-                    </IconButton>
+                    props.menu
                 }
                 title={props.header}
             />
