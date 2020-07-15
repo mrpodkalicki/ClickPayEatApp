@@ -4,7 +4,8 @@ function HomePage() {
 
     return (
         <div>
-            Orders
+            <p>Welcome Admin</p>
+            <p>Orders</p>
         </div>
     );
 }
