@@ -4,6 +4,7 @@ import Button  from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
+import {useOrderState, usePostOrder} from "../../../store/order";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,9 +65,12 @@ const submitOrderSchema = Yup.object().shape({
 
 const SubmitOrder = (props: any) => {
     const classes = useStyles();
-
-
-    if (false){
+    const {postOrderRequest} = usePostOrder();
+    const  orderState = useOrderState();
+    if(orderState.status === 'success'){
+        return <h1>Order Shipped</h1>
+    }
+    if (orderState.status === 'loading'){
         return <p>loading</p>
     }else {
         return (
@@ -87,8 +91,8 @@ const SubmitOrder = (props: any) => {
                             readyOrder.clientName = values.name;
                             readyOrder.clientSurname = values.surname;
 
+                            postOrderRequest(readyOrder)
 
-                            console.log(readyOrder);
                         }
                     }
                 >
