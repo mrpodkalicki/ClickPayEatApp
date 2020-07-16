@@ -1,0 +1,7 @@
+.listItemContainer{
+    display: flex;
+}
+
+.listItem{
+    width: 90%;
+}

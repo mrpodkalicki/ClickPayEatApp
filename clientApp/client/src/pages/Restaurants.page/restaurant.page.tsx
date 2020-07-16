@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useRestaurantActions, useReastaurantState } from '../../store/restaurant';
 import  CardItem from '../../components/MaterialUi.component/Card.component/Card.component';
-import ModalWrapper from '../../components/MaterialUi.component/Modal.component/modal';
-import AddRestaurantComponent from '../../components/Form/addRestaurant.component/addRestaurant.component';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
-import AddIcon from '@material-ui/icons/Add';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {useMealsActions, useMealsState} from "../../store/meals";
 import ListWrapper from "../../components/MaterialUi.component/ListMeals.component/ListMeals.component";
 
@@ -38,12 +32,9 @@ const Restaurants = () => {
     const getMealsResponse = useMealsState();
     const {getMenuRequest} = useMealsActions();
 
-
     useEffect(  () =>  {
         getRestaurants();
     },[counter]);
-
-
 
     const showRestaurants = () => {
         const restaurants: any = getRestaurantsResponse.data;
@@ -64,6 +55,8 @@ const Restaurants = () => {
                               <ListWrapper
                                     header ={'Menu'}
                                     restaurantId = {restaurant._id}
+                                    restaurantName = {restaurant.name}
+                                    additionalData = {restaurant}
                               />
                           }/>
                 )
