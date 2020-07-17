@@ -8,9 +8,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import CachedIcon from "@material-ui/icons/Cached";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 
 const useStyles = makeStyles({
@@ -31,7 +31,7 @@ const OrderList = () => {
     const classes = useStyles();
     const [counter, setCounter] = useState<number>(0);
     const getOrdersResponse = useOrdersState();
-    const {getOrders} = useOrdersActions();
+    const {getOrders, deleteOrderRequest} = useOrdersActions();
     useEffect(() => {
         getOrders();
     }, [counter]);
@@ -42,6 +42,16 @@ const OrderList = () => {
             'serus boczus', '19 20','adrian', 'Nowal', 'ladna 23/2',
             '13;30', '11111111', '34', '124324')
     ];
+
+
+    const deleteOrder = (event: any) => {
+        event.stopPropagation();
+        deleteOrderRequest(event.currentTarget.id)
+    }
+
+    const refresh = () => {
+        setCounter((c: number) => c +1);
+    }
 
     const allOrders = () => {
         const response: any = getOrdersResponse.data;
@@ -62,47 +72,62 @@ const OrderList = () => {
         }
     }
 
+    const displayOrders = () => {
+        const order = allOrders();
+        if(Array.isArray(order)) {
+            return (
+                order.map((row: any, index: number) => (
+                    <TableRow key={index}>
+                        <TableCell component="th" scope="row">
+                            {index + 1}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                            <IconButton  id ={row.idOrder} aria-label="delete" onClick={deleteOrder} >
+                                <DeleteForeverIcon />
+                            </IconButton>
+                        </TableCell>
+                        <TableCell align="right">{row.restaurantName}</TableCell>
+                        <TableCell align="right">{row.meals}</TableCell>
+                        <TableCell align="right">{row.quantity}</TableCell>
+                        <TableCell align="right">{row.clientName}</TableCell>
+                        <TableCell align="right">{row.clientSurname}</TableCell>
+                        <TableCell align="right">{row.deliveryAddress}</TableCell>
+                        <TableCell align="right">{row.deliveryTime}</TableCell>
+                        <TableCell align="right">{row.phoneNumber}</TableCell>
+                        <TableCell align="right">{row.totalPrice}</TableCell>
+                    </TableRow>
+                ))
+            )
+        }else {
+            return <div></div>
+        }
+    }
+
     if(getOrdersResponse.status === 'success'){
-        return ( <div>
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="right">Nr</TableCell>
-                            <TableCell align="right">Delete  </TableCell>
-                            <TableCell align="right">Restaurant</TableCell>
-                            <TableCell align="right">Meals</TableCell>
-                            <TableCell align="right">Quantity</TableCell>
-                            <TableCell align="right">Name</TableCell>
-                            <TableCell align="right">Surname</TableCell>
-                            <TableCell align="right">Address</TableCell>
-                            <TableCell align="right">Delivery time</TableCell>
-                            <TableCell align="right">Phone</TableCell>
-                            <TableCell align="right">Price</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {allOrders().map((row: any, index: string ) => (
-                            <TableRow key={index}>
-                                <TableCell component="th" scope="row">
-                                    {index +1}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    <IconButton aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell align="right">{row.restaurantName}</TableCell>
-                                <TableCell align="right">{row.meals}</TableCell>
-                                <TableCell align="right">{row.quantity}</TableCell>
-                                <TableCell align="right">{row.clientName}</TableCell>
-                                <TableCell align="right">{row.clientSurname}</TableCell>
-                                <TableCell align="right">{row.deliveryAddress}</TableCell>
-                                <TableCell align="right">{row.deliveryTime}</TableCell>
-                                <TableCell align="right">{row.phoneNumber}</TableCell>
-                                <TableCell align="right">{row.totalPrice}</TableCell>
+        return (
+            <div>
+                <IconButton aria-label="add" color="primary"  onClick={refresh} >
+                    <CachedIcon/>
+                </IconButton>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="right">Nr</TableCell>
+                                <TableCell align="right">Delete  </TableCell>
+                                <TableCell align="right">Restaurant</TableCell>
+                                <TableCell align="right">Meals</TableCell>
+                                <TableCell align="right">Quantity</TableCell>
+                                <TableCell align="right">Name</TableCell>
+                                <TableCell align="right">Surname</TableCell>
+                                <TableCell align="right">Address</TableCell>
+                                <TableCell align="right">Delivery time</TableCell>
+                                <TableCell align="right">Phone</TableCell>
+                                <TableCell align="right">Price</TableCell>
                             </TableRow>
-                        ))}
+                        </TableHead>
+                    <TableBody>
+                        {displayOrders()}
                     </TableBody>
                 </Table>
             </TableContainer>
