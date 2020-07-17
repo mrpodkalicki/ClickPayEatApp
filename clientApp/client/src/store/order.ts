@@ -7,7 +7,6 @@ const axios = require('axios');
 
 const api = {
     postOrderRequest: (order: any) => {
-        console.log(order)
         try {
             return axios.post(API_SECOND + '/order/new',{
                 "meals": order.meals,

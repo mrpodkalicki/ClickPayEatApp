@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import OrderList from "../../components/MaterialUi.component/OrdersList.component/OrdersList.component";
 
 function HomePage() {
 
@@ -6,6 +7,7 @@ function HomePage() {
         <div>
             <p>Welcome Admin</p>
             <p>Orders</p>
+            <OrderList/>
         </div>
     );
 }
