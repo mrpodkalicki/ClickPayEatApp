@@ -1,11 +1,11 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button  from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import {useSignInActions, useSignInState} from "../../../store/sigIn";
-import {useRestaurantActions} from "../../../store/restaurant";
+import { useSignInActions, useSignInState } from "../../../store/sigIn";
+import { useRestaurantActions } from "../../../store/restaurant";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,7 +37,7 @@ export const Field = styled(FormikField)`
     margin: 4px
 `;
 
-export  const ErrorMessage = styled(FormikErrorMessage)`
+export const ErrorMessage = styled(FormikErrorMessage)`
     color: red;
     border: solid black ;
 `;
@@ -66,19 +66,18 @@ const addRestaurantSchema = Yup.object().shape({
 
 const AddRestaurantComponent = (props: any) => {
     const classes = useStyles();
-    const  addRestaurantResponse = useSignInState();
-    const {getRestaurants, addRestaurant } = useRestaurantActions();
-
-    // if(addRestaurantResponse.status === 'success'){
-    //     return (
-    //         <div>
-    //            Add restaurantt
-    //         </div>
-    //     )
-    // }
-    if (addRestaurantResponse.status === 'loading'){
+    const addRestaurantResponse = useSignInState();
+    const { getRestaurants, addRestaurant } = useRestaurantActions();
+    console.log(props, addRestaurantResponse.status)
+    if(addRestaurantResponse.status === 'success'){
+        return (
+            <div>
+               Add restaurantt
+            </div>
+        )
+    }else if (addRestaurantResponse.status === 'loading') {
         return <p>czekaj</p>
-    }else {
+    } else {
         return (
             <div className={classes.root}>
                 <Formik
@@ -90,21 +89,22 @@ const AddRestaurantComponent = (props: any) => {
                     }}
                     validationSchema={addRestaurantSchema}
                     onSubmit={
-                        (values, ) => {
+                        (values) => {
                             addRestaurant(values);
+                            console.log(values)
                         }
                     }
                 >
-                    {({errors, touched, isSubmitting}) => (
+                    {({ errors, touched, isSubmitting }) => (
                         <Form>
-                            <Field name="cuisine" type="text" label="cuisine" placeholder="cuisine"/>
-                            <ErrorMessage name="cuisine"/>
-                            <Field name="name" type="text" label="name" placeholder="name"/>
-                            <ErrorMessage name="name"/>
-                            <Field name="address" type="text" label="address" placeholder="address"/>
-                            <ErrorMessage name="address"/>
-                            <Field name="category" type="text" label="category" placeholder="category"/>
-                            <ErrorMessage name="category"/>
+                            <Field name="cuisine" type="text" label="cuisine" placeholder="cuisine" />
+                            <ErrorMessage name="cuisine" />
+                            <Field name="name" type="text" label="name" placeholder="name" />
+                            <ErrorMessage name="name" />
+                            <Field name="address" type="text" label="address" placeholder="address" />
+                            <ErrorMessage name="address" />
+                            <Field name="category" type="text" label="category" placeholder="category" />
+                            <ErrorMessage name="category" />
                             <Button className={'btn'} variant="contained" color="primary" type="submit">Submit</Button>
                         </Form>
                     )}

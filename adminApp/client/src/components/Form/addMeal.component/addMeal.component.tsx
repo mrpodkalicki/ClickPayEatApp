@@ -42,6 +42,7 @@ export  const ErrorMessage = styled(FormikErrorMessage)`
 `;
 
 
+console.log('')
 
 const addRestaurantSchema = Yup.object().shape({
     name: Yup.string()

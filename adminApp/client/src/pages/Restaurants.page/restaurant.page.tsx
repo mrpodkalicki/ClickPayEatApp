@@ -91,7 +91,7 @@ const Restaurants = () => {
           <div>
               <h2>Restaurants</h2>
               <ModalWrapper button = {<AddIcon/>} tittle = {'Add restaurant'} >
-                  <AddRestaurantComponent setCounter = {setCounter}/>
+                  <AddRestaurantComponent refresh={refresh} setCounter = {setCounter}/>
               </ModalWrapper>
               <IconButton aria-label="add" color="primary"  onClick={refresh} >
                   <CachedIcon/>
