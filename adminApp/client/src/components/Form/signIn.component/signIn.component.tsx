@@ -6,11 +6,7 @@ import Button from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import { useSignInActions, useSignInState } from '../../../store/sigIn'
-import { FullscreenExit } from '@material-ui/icons';
-
-
-
+import { useSignAdminActions, useSignAdminState } from '../../../store/signAdmin'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -24,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
             '&> p': {
                 fontSize: '50px',
                 alignSelf: 'felx-start',
-                marginBottom: '8rem',
+                marginBottom: '0',
 
             },
             '& .btn': {
@@ -107,6 +103,10 @@ const useStyles = makeStyles((theme: Theme) =>
                 boxShadow: 'inset 0 - 5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2)',
             },
         },
+
+        form: {
+            marginTop: '2rem'
+        },
         errorMessageEmail: {
             color: 'red',
             textAlign: 'right',
@@ -168,8 +168,8 @@ const SignIn = () => {
     const history = useHistory();
     const classes = useStyles();
 
-    const signInResponse = useSignInState();
-    const { signIn, setSignInResponse } = useSignInActions();
+    const signInResponse = useSignAdminState();
+    const { singUpAdmin, signInAdmin } = useSignAdminActions();
 
 
     if (signInResponse.status === 'success') {
@@ -183,7 +183,8 @@ const SignIn = () => {
     } else {
         return (
             <div className={classes.root}>
-                <p>WELCOME TO CLICK PAY EAT ADMIN APP</p>
+                <p>WELCOME TO CLICK PAY EAT APP</p>
+                <p>ADMIN</p>
                 <Formik
                     initialValues={{
                         email: '',
@@ -192,12 +193,12 @@ const SignIn = () => {
                     validationSchema={SignInSchema}
                     onSubmit={
                         values => {
-                            signIn(values)
+                            signInAdmin(values)
                         }
                     }
                 >
                     {({ errors, touched, isSubmitting }) => (
-                        <Form>
+                        <Form className={classes.form}>
                             <Field name="email" type="email" label="E-mail" placeholder="email" />
                             <ErrorMessage name="email">{msg => <div className={classes.errorMessageEmail}>{msg}</div>}</ErrorMessage>
                             <Field name="password" type="password" label="password" placeholder="password" />

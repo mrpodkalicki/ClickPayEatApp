@@ -42,6 +42,10 @@ const orderSchema = Schema({
         type: Number,
         required: true,
     },
+    clientEmail: {
+        type: String,
+        required: true,
+    },
     clientName: {
         type: String,
         required: true,

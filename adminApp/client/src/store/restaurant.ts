@@ -130,6 +130,7 @@ export const useRestaurantActions = () => {
     };
 };
 
-export const useReastaurantState = () => useSelector((state) =>  state.getRestaurantsResponse);
+export const useRestaurantState = () => useSelector((state) =>  state.getRestaurantsResponse);
+
 
 export default restaurants.reducer;

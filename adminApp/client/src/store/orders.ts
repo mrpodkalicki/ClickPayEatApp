@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { put, takeEvery } from 'redux-saga/effects';
 import { useDispatch } from '../hooks/useDispatch';
 import { useSelector } from '../hooks/useSelector';
-import {API, API_TWO} from "../utilities/API";
+import {API_TWO} from "../utilities/API";
 const axios = require('axios');
 
 

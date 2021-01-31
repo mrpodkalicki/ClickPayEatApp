@@ -41,6 +41,68 @@ exports.getOrder = (req, res, next) => {
         });
 };
 
+exports.getOrderByEmail = (req, res, next) => {
+    const email = req.params.email;
+    Order.find({ clientEmail: email })
+        .then((order) => {
+            if (!order) {
+                const error = new Error('Order not found');
+                error.statusCode = 404;
+                throw error;
+            }
+            const result = { meals: []};
+            let totalPrice = 0;
+            for (const singleOrder of order) {
+                result.restaurantName = singleOrder.restaurantName;
+                totalPrice += singleOrder.totalPrice;
+                for (const meal of singleOrder.meals) {
+                    result.meals.push(meal);
+                }
+            }
+            result.totalPrice = totalPrice;
+            result.savedMoney = Math.floor(totalPrice * 0.12);
+            res.status(200).json({ order: result });
+        })
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+}
+
+exports.getOrderByRestaurantName = (req, res, next) => {
+    const restaurant = req.params.restaurantName;
+    Order.find({ restaurantName: restaurant })
+        .then((order) => {
+            if (!order) {
+                const error = new Error('Order not found');
+                error.statusCode = 404;
+                throw error;
+            }
+            const result = [];
+            for (const singleOrder of order) {
+                result.push({
+                    clientName: singleOrder.clientName,
+                    clientSurname: singleOrder.clientSurname,
+                    clientEmail: singleOrder.clientEmail,
+                    deliveryAddress: singleOrder.deliveryAddress,
+                    deliveryTime: singleOrder.deliveryTime,
+                    phoneNumber: singleOrder.phoneNumber,
+                    totalPrice: singleOrder.totalPrice,
+                    meals: singleOrder.meals
+                })
+            }
+            res.status(200).json({ orders: result });
+        })
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+}
+
 exports.postOrder = (req, res, next) => {
     const meals = req.body.meals;
     const restaurant = req.body.restaurantName;
@@ -48,6 +110,7 @@ exports.postOrder = (req, res, next) => {
     const address = req.body.deliveryAddress;
     const time = req.body.deliveryTime;
     const phone = req.body.phoneNumber;
+    const email = req.body.clientEmail;
     const name = req.body.clientName;
     const surname = req.body.clientSurname;
     const order = new Order({
@@ -57,6 +120,7 @@ exports.postOrder = (req, res, next) => {
         deliveryAddress: address,
         deliveryTime: time,
         phoneNumber: phone,
+        clientEmail: email,
         clientName: name,
         clientSurname: surname,
     });

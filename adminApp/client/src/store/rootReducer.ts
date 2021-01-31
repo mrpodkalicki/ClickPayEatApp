@@ -1,12 +1,14 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import signInReducer from './sigIn';
+import signAdminReducer from './signAdmin';
 import restaurantsReducer from './restaurant';
 import mealsReducer from './meals';
 import ordersReducer from './orders';
 
+
 export const rootReducer = combineReducers({
-    signInResponse: signInReducer,
+    signAdminResponse: signAdminReducer,
     getRestaurantsResponse: restaurantsReducer,
     getMealsResponse: mealsReducer,
-    getOrdersResponse: ordersReducer
+    getOrdersResponse: ordersReducer,
+
 });

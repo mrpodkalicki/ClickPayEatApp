@@ -6,6 +6,8 @@ const userController = require('../controllers/user');
 
 const router = express.Router();
 
+router.get('/all', userController.getAllUsers);
+
 router.post('/signup', [
     body('email')
         .isEmail()

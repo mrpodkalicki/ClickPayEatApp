@@ -6,6 +6,8 @@ const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
+router.get('/all', adminController.getAllAdmins);
+
 router.post(
     '/signup',
     [

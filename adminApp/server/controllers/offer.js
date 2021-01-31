@@ -41,7 +41,7 @@ exports.postOffer = (req, res, next) => {
 
     const restaurant = new Restaurant({
         cuisine: cuisine,
-        name: name,
+        name: name.toLowerCase(),
         address: address,
         category: category,
     });
