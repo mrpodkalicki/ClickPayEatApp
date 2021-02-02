@@ -1,9 +1,45 @@
 const { validationResult } = require('express-validator/check');
 
 const Admin = require('../models/admin');
+const User = require('../models/user');
 
 function isEmptyObject(obj) {
     return !Object.keys(obj).length;
+}
+
+exports.getUserRole = (req, res, next) => {
+    const email = req.params.email;
+    Promise.any([
+        Admin.find({ email: email })
+            .then((admin) => {
+                if (!isEmptyObject(admin)) return new Promise((resolve) => resolve(admin));
+                return new Promise((resolve, reject) => reject());
+            })
+            .catch((err) => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            }),
+        User.find({ email: email })
+            .then((user) => {
+                if (!isEmptyObject(user)) return new Promise((resolve) => resolve(user));
+                return new Promise((resolve, reject) => reject());
+            })
+            .catch((err) => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            })
+    ])
+    .then(obj => {
+        const re = /@(\w+)/;
+        const role = obj[0].email.match(re)[1];
+        res.status(200).json({ role: role === 'gmail' ? 'user': role })
+    })
+    .catch(err => next(err))
+    
 }
 
 exports.getAllAdmins = (req, res, next) => {
