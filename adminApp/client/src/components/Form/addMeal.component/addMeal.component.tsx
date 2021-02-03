@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button  from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import {useMealsActions, useMealsState} from "../../../store/meals";
+import { useMealsActions, useMealsState } from "../../../store/meals";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,7 +36,7 @@ export const Field = styled(FormikField)`
     margin: 4px
 `;
 
-export  const ErrorMessage = styled(FormikErrorMessage)`
+export const ErrorMessage = styled(FormikErrorMessage)`
     color: red;
     border: solid black ;
 `;
@@ -51,7 +51,7 @@ const addRestaurantSchema = Yup.object().shape({
         .required('Required'),
     description: Yup.string()
         .min(5, 'Too Short!')
-        .max(70, 'Too Long!')
+        .max(300, 'Too Long!')
         .required('Required'),
     price: Yup.number()
         .required('Required'),
@@ -62,11 +62,11 @@ const addRestaurantSchema = Yup.object().shape({
 const AddMeal = (props: any) => {
     const classes = useStyles();
     const getMealsResponse = useMealsState();
-    const {getMenuRequest, addMealRequest, deleteMealRequest} = useMealsActions();
+    const { getMenuRequest, addMealRequest, deleteMealRequest } = useMealsActions();
 
-    if (getMealsResponse.status === 'loading'){
+    if (getMealsResponse.status === 'loading') {
         return <p>loading</p>
-    }else {
+    } else {
         return (
             <div className={classes.root}>
                 <Formik
@@ -78,10 +78,10 @@ const AddMeal = (props: any) => {
                     }}
                     validationSchema={addRestaurantSchema}
                     onSubmit={
-                        (values ) => {
+                        (values) => {
 
                             const body = {
-                                restaurantId :  props.restaurantId,
+                                restaurantId: props.restaurantId,
                                 name: values.name,
                                 description: values.description,
                                 price: values.price
@@ -90,14 +90,14 @@ const AddMeal = (props: any) => {
                         }
                     }
                 >
-                    {({errors, touched, isSubmitting}) => (
+                    {({ errors, touched, isSubmitting }) => (
                         <Form>
-                            <Field name="name" type="text" label="name" placeholder="name"/>
-                            <ErrorMessage name="name"/>
-                            <Field name="description" type="text" label="description" placeholder="description"/>
-                            <ErrorMessage name="description"/>
-                            <Field name="price" type="number" label="price" placeholder="price"/>
-                            <ErrorMessage name="price"/>
+                            <Field name="name" type="text" label="name" placeholder="name" />
+                            <ErrorMessage name="name" />
+                            <Field name="description" type="text" label="description" placeholder="description" />
+                            <ErrorMessage name="description" />
+                            <Field name="price" type="number" label="price" placeholder="price" />
+                            <ErrorMessage name="price" />
                             <Button className={'btn'} variant="contained" color="primary" type="submit">Submit</Button>
                         </Form>
                     )}

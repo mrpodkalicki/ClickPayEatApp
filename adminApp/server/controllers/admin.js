@@ -9,7 +9,7 @@ function isEmptyObject(obj) {
 
 exports.getUserRole = (req, res, next) => {
     const email = req.params.email;
-    Promise.any([
+    Promise.race([
         Admin.find({ email: email })
             .then((admin) => {
                 if (!isEmptyObject(admin)) return new Promise((resolve) => resolve(admin));
