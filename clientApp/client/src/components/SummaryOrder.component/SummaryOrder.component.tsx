@@ -17,9 +17,7 @@ const SummaryOrder = (props: any) => {
             )
         })
     }
-    if(orderState.status === 'success'){
-        return <div></div>
-    }else {
+
         return (
             <div>
                 <h2>Restaurant {props.order.restaurantName}</h2>
@@ -28,7 +26,7 @@ const SummaryOrder = (props: any) => {
             </div>
 
         )
-    }
+    
 
 }
 

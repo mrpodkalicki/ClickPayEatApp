@@ -5,6 +5,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid, { GridSpacing } from '@material-ui/core/Grid';
 import {useMealsActions, useMealsState} from "../../store/meals";
 import ListWrapper from "../../components/MaterialUi.component/ListMeals.component/ListMeals.component";
+import Swal from 'sweetalert2';
+import {useOrderState, usePostOrder} from "../../store/order";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
         control: {
             padding: theme.spacing(2),
         },
+        header: {
+            textAlign: 'center',
+        }
     }),
 );
 
@@ -31,10 +36,21 @@ const Restaurants = () => {
     const getRestaurantsResponse = useReastaurantState();
     const getMealsResponse = useMealsState();
     const {getMenuRequest} = useMealsActions();
+    const [isShowALertSubmitOrder, setIsShowALertSubmitOrder] = useState<boolean>(false);
+    const  orderState: any = useOrderState();
+    const {postOrderRequest} = usePostOrder();
 
     useEffect(  () =>  {
         getRestaurants();
     },[counter]);
+
+
+
+    const isSubmitOrder = (readyOrder: any) => {
+        postOrderRequest(readyOrder)
+        setIsShowALertSubmitOrder(true);
+        refresh();
+    }
 
     const showRestaurants = () => {
         const restaurants: any = getRestaurantsResponse.data;
@@ -57,6 +73,7 @@ const Restaurants = () => {
                                     restaurantId = {restaurant._id}
                                     restaurantName = {restaurant.name}
                                     additionalData = {restaurant}
+                                    isSubmitOrder = {isSubmitOrder}
                               />
                           }/>
                 )
@@ -69,10 +86,22 @@ const Restaurants = () => {
         setCounter((c: number) => c +1);
     }
 
+    if (orderState.status === 'success' && isShowALertSubmitOrder) {
+        Swal.fire({
+            icon: 'success',
+            showCloseButton: true,
+            title: 'Order send to restaurant',
+    
+        }).then((result: any) => {
+            setIsShowALertSubmitOrder(false);
+            refresh();
+        })
+    }
+
     if(getRestaurantsResponse.status === 'success'){
         return (
           <div>
-              <h2>Restaurants</h2>
+              <h2 className={classes.header}>Restaurants</h2>
               <Grid container className={classes.root} spacing={2}>
                   <Grid item xs={12}>
                       <Grid container justify="center" spacing={3}>

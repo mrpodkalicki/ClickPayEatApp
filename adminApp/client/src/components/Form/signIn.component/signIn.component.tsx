@@ -1,12 +1,15 @@
-import React, { useContext } from 'react';
-import { useHistory } from "react-router-dom";
-import { Redirect } from 'react-router-dom';
+import React, {useState} from 'react';
+import { useHistory, useLocation } from "react-router-dom";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as FormikErrorMessage } from 'formik';
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
-import { useSignAdminActions, useSignAdminState } from '../../../store/signAdmin'
+import { useSignAdminActions, useSignAdminState } from '../../../store/signAdmin';
+import { useRestaurantActions, useRestaurantState } from '../../../store/userRole';
+import {ApiStatus} from '../../../enums/apiStatus';
+import {useAuth} from '../../../Routes';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -164,52 +167,83 @@ const SignInSchema = Yup.object().shape({
         .required('Required'),
 });
 
+const userLoggedInDetails = {
+    userName: ''
+}
+
 const SignIn = () => {
     const history = useHistory();
+    let auth: any = useAuth();
+    let location = useLocation();
+    let { from }: any = location.state || { from: { pathname: "/" } };
     const classes = useStyles();
-
     const signInResponse = useSignAdminState();
+    const getUserRoleResponse: any = useRestaurantState();
+    const {getUserRole} = useRestaurantActions();
     const { singUpAdmin, signInAdmin } = useSignAdminActions();
-
-
-    if (signInResponse.status === 'success') {
-        return (
-            <div>
-                <Redirect to="/dashboard" />
-            </div>
-        )
-    } if (signInResponse.status === 'loading') {
-        return <p>logowanie</p>
-    } else {
-        return (
-            <div className={classes.root}>
-                <p>WELCOME TO CLICK PAY EAT APP</p>
-                <p>ADMIN</p>
-                <Formik
-                    initialValues={{
-                        email: '',
-                        password: ''
-                    }}
-                    validationSchema={SignInSchema}
-                    onSubmit={
-                        values => {
-                            signInAdmin(values)
-                        }
-                    }
-                >
-                    {({ errors, touched, isSubmitting }) => (
-                        <Form className={classes.form}>
-                            <Field name="email" type="email" label="E-mail" placeholder="email" />
-                            <ErrorMessage name="email">{msg => <div className={classes.errorMessageEmail}>{msg}</div>}</ErrorMessage>
-                            <Field name="password" type="password" label="password" placeholder="password" />
-                            <ErrorMessage name="password">{msg => <div className={classes.errorMessagePassword}>{msg}</div>}</ErrorMessage>
-                            <p className={classes.credentials}>{signInResponse.status === 'failure' ? 'wrong email or password' : ''}</p>
-                            <Button className={'btn btn-primary btn-block btn-large'} variant="contained" color="primary" type="submit">Submit</Button>
-                        </Form>
-                    )}
-                </Formik>
-            </div>
-        );
+    const [isSubmit, setisSubmit] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>('');
+    
+    let userDetailsLocal = JSON.parse(localStorage.getItem('user') as string);
+    let userDetails = {
+        email: email,
+        role: '',
+        isLoggedIn: false
     }
+
+    if (userDetailsLocal?.isLoggedIn) {
+        auth.signin()
+        history.push('/dashboard')
+    } else {
+        if (signInResponse.status ===  ApiStatus.LOADING || getUserRoleResponse.status === ApiStatus.LOADING) {
+            return(
+            <div>
+                <CircularProgress /><CircularProgress color="secondary" />
+            </div>)
+        } else if(signInResponse.status ===  ApiStatus.SUCCESS && getUserRoleResponse.status === ApiStatus.SUCCESS) {
+            userDetails.isLoggedIn = true;
+            userDetails.role = getUserRoleResponse.data.data.role;
+            if (isSubmit) {
+                localStorage.setItem('user', JSON.stringify(userDetails) as string);
+            }
+            auth.signin()
+            history.push('/dashboard')
+        }
+    }
+
+    return (
+        <div className={classes.root}>
+            <p>WELCOME TO CLICK PAY EAT APP</p>
+            <p>ADMIN</p>
+            <Formik
+                initialValues={{
+                    email: '',
+                    password: ''
+                }}
+                validationSchema={SignInSchema}
+                onSubmit={
+                    values => {
+                        setEmail(values.email);
+                        getUserRole(values.email);
+                        signInAdmin(values);
+                        setisSubmit(true);
+                        
+                    }
+                }
+            >
+                {({ errors, touched, isSubmitting }) => (
+                    <Form className={classes.form}>
+                        <Field name="email" type="email" label="E-mail" placeholder="email" />
+                        <ErrorMessage name="email">{msg => <div className={classes.errorMessageEmail}>{msg}</div>}</ErrorMessage>
+                        <Field name="password" type="password" label="password" placeholder="password" />
+                        <ErrorMessage name="password">{msg => <div className={classes.errorMessagePassword}>{msg}</div>}</ErrorMessage>
+                        <p className={classes.credentials}>{signInResponse.status === 'failure' ? 'wrong email or password' : ''}</p>
+                        <Button className={'btn btn-primary btn-block btn-large'} variant="contained" color="primary" type="submit">Submit</Button>
+                    </Form>
+                )}
+            </Formik>
+        </div>
+    );
+    return<div></div>
 }
 export default SignIn;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -6,6 +6,9 @@ import  { Routes } from "./Routes";
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store';
+import { AppContext } from "./contex";
+
+
 
 ReactDOM.render(
   <React.Fragment>

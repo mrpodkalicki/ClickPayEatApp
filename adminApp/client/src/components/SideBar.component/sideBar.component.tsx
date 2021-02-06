@@ -5,7 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Container from '@material-ui/core/Container';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import {useAuth} from '../../Routes';
 import './sideBar.component.css'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,10 +24,27 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-
-
 const  SideBar = ({children}: any) => {
+    let auth: any = useAuth();
+    const history = useHistory();
+
+    const logOutUser = () => {
+        localStorage.removeItem('user');
+        auth.signout(() => history.push("/"));    
+    }
+    
+
     const classes = useStyles();
+    let redirectRestauratn: any ;
+    const detailsUSer = JSON.parse(localStorage.getItem('user') as string);
+    if (detailsUSer?.role === 'admin') {
+        redirectRestauratn = <MenuItem>
+        <Link className={'menu-list__item__link'} to="/restaurants">Restaurants</Link></MenuItem> 
+    } else {
+        redirectRestauratn = <div></div> ;
+    }
+    
+
     return (
         <Box component="span" m={1} className={'container'}>
             <Paper className={classes.paper}>
@@ -34,12 +52,12 @@ const  SideBar = ({children}: any) => {
                     <MenuItem>
                         <Link className={'menu-list__item__link'} to="/dashboard">Dashboard</Link>
                     </MenuItem>
-                    <MenuItem>
-                        <Link className={'menu-list__item__link'} to="/restaurants">Restaurants</Link>
-                    </MenuItem>
+                    
+                        {redirectRestauratn}
+                   
                     <MenuItem >
-                        <a href={'/signIn'}>
-                            Log
+                        <a className={'menu-list__item__link'} onClick={logOutUser} href={'/'}>
+                            Log out
                         </a>
                     </MenuItem>
                 </MenuList>
@@ -47,7 +65,6 @@ const  SideBar = ({children}: any) => {
             <Container maxWidth="lg" fixed>
                 <div>{children}</div>
             </Container>
-
         </Box>
     )
 }

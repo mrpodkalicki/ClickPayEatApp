@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
             '& .btn': {
                 display: 'inline-block',
                 padding: '4px 10px 4px',
-                margin: 0,
+                marginTop: '5rem',
                 fontSize: '13px',
                 lineHeight: '18px',
                 color: '#333333',
@@ -124,7 +124,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         credentials: {
             color: 'red',
-            position: 'absolute'
+            position: 'absolute',
+            top: '7rem',
+            left:' 10rem'
         }
     }),
 );
@@ -165,9 +167,11 @@ const SignIn = () => {
 
     const signInResponse = useSignInState();
     const { signIn, setSignInResponse } = useSignInActions();
+    const [email, setEmail] = useState<string>('');
 
 
     if (signInResponse.status === 'success') {
+        localStorage.setItem('client', JSON.stringify({email: email}) as string);
         return (
             <div>
                 <Redirect to="/dashboard" />
@@ -188,6 +192,7 @@ const SignIn = () => {
                     onSubmit={
                         values => {
                             signIn(values)
+                            setEmail(values.email);
                         }
                     }
                 >

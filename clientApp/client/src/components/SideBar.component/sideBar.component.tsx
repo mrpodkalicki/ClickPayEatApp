@@ -12,14 +12,22 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             display: 'flex',
+            height: '100%',
         },
         paper: {
             width: 200,
-            height: '100vh',
             backgroundColor:'#3f50b5',
-            color: 'white'
+            color: 'white',
 
         },
+        navItem: {
+            marginBottom: 30,
+
+        },
+        navContainer: {
+            margin: 'auto',
+            minHeight: '96.7vh'
+        }
     }),
 );
 
@@ -30,14 +38,14 @@ const  SideBar = ({children}: any) => {
     return (
         <Box component="span" m={1} className={'container'}>
             <Paper className={classes.paper}>
-                <MenuList>
-                    <MenuItem>
+                <MenuList className={classes.navContainer}>
+                    <MenuItem className={classes.navItem}>
                         <Link className={'menu-list__item__link'} to="/dashboard">Dashboard</Link>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem className = {classes.navItem}>
                         <Link className={'menu-list__item__link'} to="/restaurants">Restaurants</Link>
                     </MenuItem>
-                    <MenuItem >
+                    <MenuItem className = {classes.navItem}>
                         <a href={'/signIn'}>
                             Log
                         </a>

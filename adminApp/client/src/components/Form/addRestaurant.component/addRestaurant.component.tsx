@@ -5,9 +5,7 @@ import { Formik, Form as FormikForm, Field as FormikField, ErrorMessage as Formi
 import * as Yup from "yup";
 import styled, { css } from 'styled-components';
 import { useRestaurantActions, useRestaurantState } from "../../../store/restaurant";
-import {ApiStatus} from '../../../enums/apiStatus'
-import {RESTAURAN_DOMAIN} from '../../../utilities/createAccount';
-import {useSignAdminActions, useSignAdminState} from '../../../store/signAdmin';
+import {ApiStatus} from '../../../enums/apiStatus';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,8 +43,6 @@ export const ErrorMessage = styled(FormikErrorMessage)`
     border: solid black ;
 `;
 
-
-
 const addRestaurantSchema = Yup.object().shape({
     cuisine: Yup.string()
         .min(5, 'Too Short!')
@@ -75,7 +71,7 @@ const AddRestaurantComponent = (props: any) => {
 
    
     if (addRestaurantResponse.status === ApiStatus.LOADING) {
-        return <p>czekaj</p>
+        return <p>loading</p>
     } else if(addRestaurantResponse.status === ApiStatus.SUCCESS) {
         return (
             <div className={classes.root}>
@@ -89,32 +85,7 @@ const AddRestaurantComponent = (props: any) => {
                     validationSchema={addRestaurantSchema}
                     onSubmit={
                         (values) => {
-                          
                           props.getaddRestaurantReqForm(values);
-                            // addRestaurant(values);
-                            // if (addRestaurantResponse.status === ApiStatus.SUCCESS) {
-                            //     const emial = values.name + RESTAURAN_DOMAIN;
-                            //     const password = values.name;
-                            //     singUpAdmin({
-                            //         email: emial,
-                            //         password: values.name
-                            //     })
-                            //     console.log(singAdminResponse.status)
-                            //     if (singAdminResponse.status === ApiStatus.SUCCESS) {
-                            //         Swal.fire({
-                            //             icon: 'success',
-                            //             showCloseButton: true,
-                            //             title: 'Adding restauran successfully',
-                            //             html: `<h4>Creating account for restaurant</h4>
-                            //                     <h5>email: ${emial}</h5>
-                            //                     <h5>password: ${password}</h5>`
-    
-                            //         }).then((result) => {
-                            //             props.refresh();
-                            //         })
-                            //     }
-                               
-                            // }   
                         }
                     }
                 >

@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             flexGrow: 1,
             margin: 5,
-
         },
         paper: {
             height: 140,
@@ -62,8 +61,24 @@ const Restaurants = () => {
 
     const deleteItem = (event: any) => {
         event.stopPropagation();
-        deleteRestaurant(event.currentTarget.id);
-        setIsShowAlertDeleteRestaurant(true);
+        const restId = event.currentTarget.id;
+        Swal.fire({
+            title: 'Are you sure delete restaurant ?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                deleteRestaurant(restId);
+                setIsShowAlertDeleteRestaurant(true);
+            }
+          })
+          
+
+        
     }
     const getaddRestaurantReqForm = (reqForm: any) => {
         addRestaurant(reqForm);   
@@ -83,6 +98,7 @@ const Restaurants = () => {
                 showCloseButton: true,
                 title: 'Adding restauran failed, try again',
             })
+
         }
     }
 
@@ -120,11 +136,11 @@ const Restaurants = () => {
         setIsShowAlertDeleteRestaurant(false);
         refresh();
     })
- } else if(getRestaurantsResponse.status === ApiStatus.SUCCESS && isShowAlertDeleteRestaurant) {
+ } else if(getRestaurantsResponse.status === ApiStatus.FAILURE && isShowAlertDeleteRestaurant) {
     Swal.fire({
         icon: 'error',
         showCloseButton: true,
-        title: 'Deleting restauran successfully',
+        title: 'Deleting restauran failed',
     }).then((result) => {
         setIsShowAlertDeleteRestaurant(false);
     })

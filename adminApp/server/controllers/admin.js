@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator/check');
+var any = require('promise.any');
 
 const Admin = require('../models/admin');
 const User = require('../models/user');
@@ -9,44 +10,27 @@ function isEmptyObject(obj) {
 
 exports.getUserRole = (req, res, next) => {
     const email = req.params.email;
-    Promise.race([
-        Admin.find({ email: email })
+        Admin.findOne({ email: email })
             .then((admin) => {
-                if (!isEmptyObject(admin)) return new Promise((resolve) => resolve(admin));
-                return new Promise((resolve, reject) => reject());
+                if (admin ==null || admin ==undefined || isEmptyObject(admin)) {
+                    const error = new Error('No admin found');
+                    error.statusCode = 404;
+                    throw error;
+                }
+                const re = /@(\w+)/;
+                const role = admin.email.match(re)[1];
+                res.status(200).json({ role: role })
             })
             .catch((err) => {
-                if (!err.statusCode) {
-                    err.statusCode = 500;
-                }
-                next(err);
-            }),
-        User.find({ email: email })
-            .then((user) => {
-                if (!isEmptyObject(user)) return new Promise((resolve) => resolve(user));
-                return new Promise((resolve, reject) => reject());
-            })
-            .catch((err) => {
-                if (!err.statusCode) {
-                    err.statusCode = 500;
-                }
                 next(err);
             })
-    ])
-    .then(obj => {
-        const re = /@(\w+)/;
-        const role = obj[0].email.match(re)[1];
-        res.status(200).json({ role: role === 'gmail' ? 'user': role })
-    })
-    .catch(err => next(err))
-    
 }
 
 exports.getAllAdmins = (req, res, next) => {
     Admin.find()
         .then((admins) => {
             if (isEmptyObject(admins)) {
-                const error = new Error('No orders found');
+                const error = new Error('No admins found');
                 error.statusCode = 404;
                 throw error;
             }
@@ -95,7 +79,7 @@ exports.login = (req, res, next) => {
     Admin.findOne({ email: email })
         .then((admin) => {
             if (!admin) {
-                const error = new Error('Not found');
+                const error = new Error('No admin found');
                 error.statusCode = 401;
                 throw error;
             }

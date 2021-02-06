@@ -12,6 +12,8 @@ import SelectInput from "../SelectInput.component/SelectInput.component";
 import './ListMeals.componengt.css'
 import SummaryOrder from "../../SummaryOrder.component/SummaryOrder.component";
 import SubmitOrder from "../../Form/SubmitOrder.component/SubmitOrder.component";
+import {useOrderState, usePostOrder} from "../../../store/order";
+import Swal from 'sweetalert2';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,11 +37,22 @@ const ListWrapper = (props: any) => {
     const getMealsResponse = useMealsState();
     const [checked, setChecked] = React.useState([-1]);
     const [order, setOrder] = React.useState<any>([]);
-    const [summaryOrder, setSummaryOrder] = React.useState<any>([]);
+    const  orderState: any = useOrderState();
 
     useEffect(() => {
         getMenuRequest(props.restaurantId);
     }, [counter]);
+
+    const refresh = () => {
+        setCounter((c: number) => c +1);
+    }
+
+
+    const submitOrder = (readyOrder: any) => {
+        props.isSubmitOrder(readyOrder);
+        refresh();
+       
+    };
 
     const prepareSummaryOrder = () => {
         const meals = order.map((item: any) => {
@@ -175,11 +188,9 @@ const ListWrapper = (props: any) => {
                                     {getAllMeals()}
                                 </div>
                             </List>
-                            <ModalWrapper button = {
-                                   ' Submit order'
-                            } tittle = { 'Submit order' }>
+                            <ModalWrapper button = {' Submit order'} tittle = { 'Submit order' }>
                                 <SummaryOrder order ={prepareSummaryOrder()}/>
-                                <SubmitOrder order ={prepareSummaryOrder()}/>
+                                <SubmitOrder order ={prepareSummaryOrder()} submitOrder = {submitOrder}/>
                             </ModalWrapper>
                         </div>
                     </div>

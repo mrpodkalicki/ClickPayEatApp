@@ -87,6 +87,7 @@ const AddMeal = (props: any) => {
                                 price: values.price
                             }
                             addMealRequest(body);
+                            props.submitAddMeal();
                         }
                     }
                 >

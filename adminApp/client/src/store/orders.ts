@@ -7,9 +7,17 @@ const axios = require('axios');
 
 
 const api = {
-    getOrdersRequest: () => {
+    getOrdersRequest: (detailsOrder: any) => {
+        console.log(detailsOrder)
+        let postUrl = ''
+        if (detailsOrder.role === 'admin') {
+            postUrl = '/order/all'
+        } else if (detailsOrder.role === 'restaurant') {
+            postUrl = '/order/restaurant/' +  detailsOrder.restaurantName;
+            console.log(postUrl)
+        }
         try{
-            return axios.get( API_TWO + '/order/all');
+            return axios.get( API_TWO + postUrl);
         } catch (err) {
             return err
         }
@@ -31,7 +39,7 @@ const orders = createSlice({
         error: '',
     },
     reducers: {
-        getOrdersRequest: (state) => {
+        getOrdersRequest: (state,  _action: PayloadAction<any>) => {
             state.status = 'loading';
             state.error = '';
         },
@@ -62,9 +70,9 @@ const orders = createSlice({
 
 const { actions } = orders;
 
-function* getOrdersRequestSagaWorker() {
+function* getOrdersRequestSagaWorker({payload}: any) {
     try {
-        const response: any = yield api.getOrdersRequest();
+        const response: any = yield api.getOrdersRequest(payload);
         yield put(actions.getOrdersSuccess(response));
     } catch (ex) {
         yield put(actions.getOrdersFailure(ex.message));
@@ -88,7 +96,7 @@ export function*ordersSagaWatcher() {
 export const useOrdersActions = () => {
     const dispatch =  useDispatch();
     return {
-        getOrders: () => dispatch(actions.getOrdersRequest()),
+        getOrders: (payload :any) => dispatch(actions.getOrdersRequest(payload)),
         deleteOrderRequest: (payload :any) => dispatch(actions.deleteOrderRequest(payload))
     };
 };

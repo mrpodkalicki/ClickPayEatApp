@@ -8,9 +8,7 @@ exports.getOrders = (req, res, next) => {
     Order.find()
         .then((orders) => {
             if (isEmptyObject(orders)) {
-                const error = new Error('No orders found');
-                error.statusCode = 404;
-                throw error;
+                res.status(200).json({ order: [] });
             }
             res.status(200).json({ orders: orders });
         })
@@ -45,10 +43,8 @@ exports.getOrderByEmail = (req, res, next) => {
     const email = req.params.email;
     Order.find({ clientEmail: email })
         .then((order) => {
-            if (!order) {
-                const error = new Error('Order not found');
-                error.statusCode = 404;
-                throw error;
+            if (isEmptyObject(order)) {
+                res.status(200).json({ order: [] });
             }
             const result = { meals: []};
             let totalPrice = 0;
@@ -75,10 +71,8 @@ exports.getOrderByRestaurantName = (req, res, next) => {
     const restaurant = req.params.restaurantName;
     Order.find({ restaurantName: restaurant })
         .then((order) => {
-            if (!order) {
-                const error = new Error('Order not found');
-                error.statusCode = 404;
-                throw error;
+            if (isEmptyObject(order)) {
+                res.status(200).json({ order: [] });
             }
             const result = [];
             for (const singleOrder of order) {

@@ -52,10 +52,11 @@ const submitOrderSchema = Yup.object().shape({
         .min(2, 'Too Short!')
         .max(70, 'Too Long!')
         .required('Required'),
-    phoneNumber: Yup.string()
+    phoneNumber: Yup.number()
         .min(6, 'Too Short!')
-        .max(70, 'Too Long!')
-        .required('Required'),
+        .positive('age must be greater than zero')
+        .required('Required')
+        .typeError('phoneNumber must be a number'),
     deliveryAddress: Yup.string()
         .min(5, 'Too Short!')
         .max(70, 'Too Long!')
@@ -67,9 +68,7 @@ const SubmitOrder = (props: any) => {
     const classes = useStyles();
     const {postOrderRequest} = usePostOrder();
     const  orderState = useOrderState();
-    if(orderState.status === 'success'){
-        return <h1>Order Shipped</h1>
-    }
+    
     if (orderState.status === 'loading'){
         return <p>loading</p>
     }else {
@@ -90,8 +89,11 @@ const SubmitOrder = (props: any) => {
                             readyOrder.phoneNumber = values.phoneNumber;
                             readyOrder.clientName = values.name;
                             readyOrder.clientSurname = values.surname;
-
-                            postOrderRequest(readyOrder)
+                            const email: any = JSON.parse(localStorage.getItem('client') as string);
+                           
+                            readyOrder.clientEmail = email.email;
+                            props.submitOrder(readyOrder);
+                           
 
                         }
                     }
@@ -113,5 +115,6 @@ const SubmitOrder = (props: any) => {
             </div>
         );
     }
+    return <div></div>
 }
 export default SubmitOrder;

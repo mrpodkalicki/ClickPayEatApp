@@ -20,8 +20,8 @@ import {useReastaurantState, useRestaurantActions} from "../../../store/restaura
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            minWidth: 445,
-            margin: 3,
+            width: 900,
+            margin: 10,
         },
         media: {
             height: 0,

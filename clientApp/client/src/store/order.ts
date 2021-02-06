@@ -16,7 +16,8 @@ const api = {
                 "deliveryTime": order.deliveryTime,
                 "phoneNumber": order.phoneNumber,
                 "clientName": order.clientName,
-                "clientSurname": order.clientSurname
+                "clientSurname": order.clientSurname,
+                "clientEmail": order.clientEmail
             });
         } catch (err) {
             return err
